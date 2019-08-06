@@ -1,0 +1,29 @@
+body {
+    height: 2000px;
+    font-family: 'Press Start 2P', cursive;
+    background-image: url('../images/star-forge.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0px -200px;
+    margin: auto;
+}
+
+.char-box {
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 300px;
+    width: 300px;
+    margin: 10px;
+}
+
+#Revan {
+    background-image: url('../images/darth-revan.jpg');
+}
+
+#Bastila {
+    background-image: url('../images/bastila-shan.jpg');
+}
+
+#Nihilus {
+    background-image: url('../images/darth-nihilus.jpg');
+}
