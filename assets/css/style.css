@@ -12,14 +12,16 @@ body {
  background-color: white;
     height: 300px;
     width: 300px;
+    padding: 20px;
     margin: 10px;
+    
 }
 
 .char-pic {
     background-repeat: no-repeat;
     background-size: cover;
-    height: 250px;
-    width: 250px;
+    height: 95%;
+    width: 95%;
 }
 
 #Revan {
