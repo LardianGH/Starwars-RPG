@@ -9,11 +9,17 @@ body {
 }
 
 .char-box {
-    background-repeat: no-repeat;
-    background-size: cover;
+ background-color: white;
     height: 300px;
     width: 300px;
     margin: 10px;
+}
+
+.char-pic {
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 250px;
+    width: 250px;
 }
 
 #Revan {

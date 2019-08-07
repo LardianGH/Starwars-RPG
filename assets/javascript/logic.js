@@ -42,7 +42,7 @@ console.log(characters[i].name)
 //send all others not clicked down
 
 $("#char-select").append("");
-$("#enemies").append(charBox);
+$("#player").prepend(charBox);
 charBox = $('<div>');
       })
     });
