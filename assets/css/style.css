@@ -25,10 +25,10 @@ body {
 .char-box {
     background-color: gray;
     color: white;
-    height: 150px;
+    height: 160px;
     width: 180px;
     padding-top: 5px;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
     padding-left: 15px;
     padding-right: auto;
     margin: 10px;
@@ -41,7 +41,7 @@ body {
     background-size: cover;
     height: 85%;
     width: 95%;
-    margin-bottom: 6px;
+    margin-bottom: 3px;
 }
 
 #player {
@@ -60,12 +60,22 @@ body {
     width: 280px;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
+    left: 40px;
 }
 
 .atk-but {
     background-color: grey;
     width: 80px;
-    height: 80px;
+    height: 30px;
+    border: none;
+}
+
+.combat-text {
+        padding: 5px;
+        text-align: center;
+        font-size: 14px;
+        color: red;
 }
 
 #Revan {
