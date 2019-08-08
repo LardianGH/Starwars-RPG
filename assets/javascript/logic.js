@@ -47,6 +47,7 @@ var characters = [
 
 var hero;
 var currentEnemy;
+var wasEnemy = []
 var playerChosen = false; // playerChosen is initialized as false, will check to see if a player character is chosen
 var enemyChosen = false;  // enemyChosen is initialized as false, will check to see if an enemy has been chosen
 var afterHealth;
@@ -73,7 +74,13 @@ var fighting = function(attack, minAttack, beforeHealth) { //takes in values giv
 
 console.log(characters[0].name + "'s attack power is: " + characters[0].maxAttack)
 
+nextEnemy = function() {
+
+  $("#char-select").html("")
+
 $.each(characters, function (i, value) { //for every instance of 'characters'
+
+if ((characters[i] !== hero) && ($.inArray(characters[i], wasEnemy)) === -1){
 
   console.log('value: ', value)
 
@@ -92,6 +99,10 @@ $.each(characters, function (i, value) { //for every instance of 'characters'
   $(charBox).append($(charPic)); //impliments the div charPic to the div charBox
 
   $(charBox).append(" Max Health: " + characters[i].hp + "<br>" + " Attack: " + characters[i].maxAttack) 
+}
+else {
+  return null;
+}
 
 //on click to activate
   $(charBox).on("click", function () { //whenever a charPic is clicked
@@ -163,6 +174,9 @@ $.each(characters, function (i, value) { //for every instance of 'characters'
         console.log(characters[i].name)
         $("#combat").html("")
         $(".combat-text").html("")
+        enemyChosen = false;
+        wasEnemy.push(currentEnemy)
+        nextEnemy()
         //remove enemy from array, restart a few lines back, maybe put charboxes in a function? --TODO
       }
 
@@ -181,6 +195,8 @@ $.each(characters, function (i, value) { //for every instance of 'characters'
 
 
 });
+}
+nextEnemy()
 }
 restart() // First iteration of the whole thing
 
