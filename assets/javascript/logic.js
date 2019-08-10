@@ -4,7 +4,7 @@ restart = function() {
 
 var characters = [
   {
-    name: "Revan", //name gets picture
+    name: "Revan", //name gets picture - Can win
     playerUsing: false, //changes to true if player is chosen
     currentEnemy: false, //changes to true if enemy is chosen
     hp: 1500, // health
@@ -14,7 +14,7 @@ var characters = [
     coolDown: 15,
   },
   {
-    name: "Bastila", //name gets picture
+    name: "Bastila", //name gets picture  - Can win
     playerUsing: false, //changes to true if player is chosen
     currentEnemy: false, //changes to true if enemy is chosen
     hp: 1000, // health
@@ -24,7 +24,7 @@ var characters = [
     coolDown: 8,
   },
   {
-    name: "Nihilus", //name gets picture
+    name: "Nihilus", //name gets picture - Can win
     playerUsing: false, //changes to true if player is chosen
     currentEnemy: false, //changes to true if enemy is chosen
     hp: 800, // health
@@ -34,7 +34,7 @@ var characters = [
     coolDown: 5,
   },
   {
-    name: "Bane", //name gets picture
+    name: "Bane", //name gets picture - Can win
     playerUsing: false, //changes to true if player is chosen
     currentEnemy: false, //changes to true if enemy is chosen
     hp: 1600, // health
@@ -44,14 +44,14 @@ var characters = [
     coolDown: 20,
   },
   {
-    name: "Starweird", //name gets picture
+    name: "Starweird", //name gets picture - Can win
     playerUsing: false, //changes to true if player is chosen
     currentEnemy: false, //changes to true if enemy is chosen
     hp: 500, // health
     maxAttack: 70, // random num gen * 
     minAttack: 1,
     ability: "Telepathic scream",
-    coolDown: 10,
+    coolDown: 13,
   }
   
   
@@ -64,6 +64,8 @@ var playerChosen = false; // playerChosen is initialized as false, will check to
 var enemyChosen = false;  // enemyChosen is initialized as false, will check to see if an enemy has been chosen
 var afterHealth;
 var damage;
+
+var divLength = 1100;
 //I feel bad declaring everything globally but that seems to be the only way to make this stuff work
 
 //resets the page.
@@ -71,7 +73,7 @@ $(".charSelect-title").html("Character selection:")
 $("#player").html("")
 $(".enemySelect-title").html("")
 $("#char-select").html("")
-$("#char-select").css("width", "1100px")
+$("#char-select").css("width", divLength + "px")
 $(".combat-title").html("")
 $("#combat").html("")
 $(".combat-text").html("")
@@ -88,19 +90,19 @@ var ability = function(ability) {
 if (ability === "Mass shadow generator") {
   console.log("Revan destroyed a planet")
   currentEnemy.hp = 1;
-  currentEnemy.minAttack = 0;
-  currentEnemy.maxAttack = 0;
-  hero.hp *= 0.4;
+  currentEnemy.minAttack = -1;
+  currentEnemy.maxAttack = -1;
+  hero.hp = (Math.floor(hero.hp * 0.5))
   hero.coolDown = 15;
-  $(".combat-text").append(hero.name + " used " + hero.ability + " and annihilated " + currentEnemy.name + "." + "<br>" + " However " + hero.name + " Was also caught in the blast and barely survived" + "<br>" + hero.name + "'s health is now " + hero.hp);
+  $(".combat-text").append(hero.name + " used " + hero.ability + " and annihilated " + currentEnemy.name + "." + "<br>" + " However " + hero.name + " Was also caught in the blast and got hurt" + "<br>" + hero.name + "'s health is now " + hero.hp);
 
 }
 else if (ability === "Battle meditation") {
   console.log("Bastila turned the tide of battle")
   currentEnemy.maxAttack *= 0.8;
   currentEnemy.minAttack *= 0.8;
-  hero.maxAttack = hero.maxAttack * 1.5;
-  hero.minAttack = hero.minAttack * 1.5;
+  hero.maxAttack = hero.maxAttack * 1.6;
+  hero.minAttack = hero.minAttack * 1.6;
   hero.coolDown = 8;
   $(".combat-text").append(hero.name + " used " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
   console.log(currentEnemy.maxAttack)
@@ -125,6 +127,7 @@ else if (ability === "Telepathic scream"){
   console.log("Starweird let out a terrifying screech");
   currentEnemy.minAttack = 0;
   currentEnemy.maxAttack = 0;
+  hero.coolDown = 13;
   $(".combat-text").append(hero.name + " let out a " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
 }
 
@@ -166,6 +169,12 @@ if ((characters[i] !== hero) && ($.inArray(characters[i], wasEnemy)) === -1){
   $(charBox).append($(charPic)); //impliments the div charPic to the div charBox
 
   $(charBox).append(" Max Health: " + characters[i].hp + "<br>" + " Attack: " + characters[i].maxAttack) 
+
+  if ((characters[i] != hero) && (wasEnemy.length >= 1)) {
+
+  $(charBox).css("background-color", "red");
+
+  }
 }
 else {
   return null;
@@ -181,7 +190,8 @@ else {
     $("#char-select").append(""); //removes the selected charBox
     $('.char-box').css("background-color", "red"); //changes the css of all elements with the char-box id
     $(charBox).css("background-color", "green"); //changes just the css of the selected charBox
-    $("#char-select").css("width", "800px")
+    divLength -= 300
+    $("#char-select").css("width", divLength + "px")
     $("#player").prepend(charBox); //places it in the div above it, appearing to send all the others down
     charBox = $('<div>'); //changes charBox from a button to a div, thus making it unable to be clicked again (Not working)
     $(".charSelect-title").html("Character selected: " + characters[i].name);
@@ -203,7 +213,8 @@ else {
       $(".enemySelect-title").html("")
       $("#char-select").html(""); //removes the selected charBox
       $(charBox).css("background-color", "orange");
-      $("#char-select").css("width", "600px")
+      divLength -= 200
+      $("#char-select").css("width", divLength + "px")
       $("#combat").prepend(charBox); //places it in the div below it.
       charBox = $('<div>'); //changes charBox from a button to a div, thus making it unable to be clicked again (Not working)
 
@@ -214,6 +225,10 @@ else {
     var abilityButton = $('<button>').addClass('abil-but'); //creates a new button called attackButton and assigns it the class 'atk-but'
     $(abilityButton).html('ability') //makes the button says attack
     $("#combat").append(abilityButton); //puts the button on the page
+
+    if (hero.coolDown <= 0) {
+      $(abilityButton).css('background-color', 'yellow')
+    }
 
     $(".combat-title").html("Enemy selected: " + characters[i].name);
     enemyChosen = true;
@@ -274,7 +289,7 @@ else {
         $(attackButton).css('left', '70px')
       }
 else 
-      $(".combat-text").append("<br>" + "<br>" + currentEnemy.name + " counter attacks " + hero.name + " for " + damage + " damage, " + "<br>" + hero.name + "'s health is now " + hero.hp); //2nd combat log
+      $(".combat-text").append("<br>" + "<br>" + currentEnemy.name + " attacks " + hero.name + " for " + damage + " damage, " + "<br>" + hero.name + "'s health is now " + hero.hp); //2nd combat log
       console.log(damage)
       
 
@@ -328,7 +343,7 @@ else {
         console.log(currentEnemy.maxAttack)
       fighting((currentEnemy.maxAttack), (currentEnemy.minAttack), hero.hp) //the enemy attacks
       hero.hp = afterHealth //updates the hp
-      $(".combat-text").append("<br>" + "<br>" + currentEnemy.name + " counter attacks " + hero.name + " for " + damage + " damage, " + "<br>" + hero.name + "'s health is now " + hero.hp); //2nd combat log
+      $(".combat-text").append("<br>" + "<br>" + currentEnemy.name + " attacks " + hero.name + " for " + damage + " damage, " + "<br>" + hero.name + "'s health is now " + hero.hp); //2nd combat log
       console.log(damage)
 
       
