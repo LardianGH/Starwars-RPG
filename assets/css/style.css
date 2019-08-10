@@ -71,6 +71,16 @@ body {
     border: none;
 }
 
+.abil-but {
+    background-color: yellow;
+    width: 80px;
+    height: 30px;
+    border: none;
+    position: relative;
+    left: 200px;
+    bottom: 130px
+}
+
 .combat-text {
         padding: 5px;
         text-align: center;

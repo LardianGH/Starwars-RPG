@@ -1,5 +1,7 @@
 restart = function() {
 
+  console.log("Reset")
+
 var characters = [
   {
     name: "Revan", //name gets picture
@@ -7,7 +9,8 @@ var characters = [
     currentEnemy: false, //changes to true if enemy is chosen
     hp: 1500, // health
     maxAttack: 30, // random num gen *
-    minAttack: 20
+    minAttack: 20,
+    ability: "Mass shadow generator"
   },
   {
     name: "Bastila", //name gets picture
@@ -15,7 +18,8 @@ var characters = [
     currentEnemy: false, //changes to true if enemy is chosen
     hp: 1000, // health
     maxAttack: 20, // random num gen * 
-    minAttack: 10
+    minAttack: 10,
+    ability: "Battle meditation"
   },
   {
     name: "Nihilus", //name gets picture
@@ -23,15 +27,17 @@ var characters = [
     currentEnemy: false, //changes to true if enemy is chosen
     hp: 800, // health
     maxAttack: 20, // random num gen * 
-    minAttack: 5
+    minAttack: 5,
+    ability: "Force drain"
   },
   {
     name: "Bane", //name gets picture
     playerUsing: false, //changes to true if player is chosen
     currentEnemy: false, //changes to true if enemy is chosen
-    hp: 2000, // health
+    hp: 1600, // health
     maxAttack: 30, // random num gen *
-    minAttack: 25
+    minAttack: 25,
+    ability: "Orbalisk armor"
   },
   {
     name: "Starweird", //name gets picture
@@ -39,7 +45,8 @@ var characters = [
     currentEnemy: false, //changes to true if enemy is chosen
     hp: 500, // health
     maxAttack: 70, // random num gen * 
-    minAttack: 1
+    minAttack: 1,
+    ability: "Telepathic scream"
   }
   
   
@@ -47,7 +54,7 @@ var characters = [
 
 var hero;
 var currentEnemy;
-var wasEnemy = []
+var wasEnemy = [];
 var playerChosen = false; // playerChosen is initialized as false, will check to see if a player character is chosen
 var enemyChosen = false;  // enemyChosen is initialized as false, will check to see if an enemy has been chosen
 var afterHealth;
@@ -72,9 +79,41 @@ var fighting = function(attack, minAttack, beforeHealth) { //takes in values giv
   afterHealth = beforeHealth - damage //the variable afterHealth is equal to the health before minus the damage
 }
 
+var ability = function(ability) {
+
+  if (hero.coolDown === 0) {
+if (ability === "Mass shadow generator") {
+  console.log("Revan destroyed a planet")
+  currentEnemy.hp = 1;
+  hero.hp *= 0.1;
+  $(".combat-text").append(hero.name + " used " + hero.ability + " and annihilated " + currentEnemy.name + "." + "<br>" + " However " + hero.name + " Was also caught in the blast and barely survived" + "<br>" + hero.name + "'s health is now " + hero.hp);
+
+}
+else if (ability === "Battle meditation") {
+  console.log("Bastila turned the tide of battle")
+  currentEnemy.maxAttack *= 0.8;
+  currentEnemy.minAttack *= 0.8;
+  hero.maxAttack = hero.maxAttack * 1.5;
+  hero.minAttack = hero.minAttack * 1.5;
+  $(".combat-text").append(hero.name + " used " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
+  console.log(currentEnemy.maxAttack)
+}
+}
+else {
+
+}
+
+}
+
 console.log(characters[0].name + "'s attack power is: " + characters[0].maxAttack)
 
 nextEnemy = function() {
+
+  if(wasEnemy.length === (characters.length - 1)) {
+    alert("Game won, over")
+    console.log("done")
+    restart() //not work
+  }
 
   $("#char-select").html("")
 
@@ -90,7 +129,7 @@ if ((characters[i] !== hero) && ($.inArray(characters[i], wasEnemy)) === -1){
 
   charPic.attr("id", characters[i].name); //assigns a unique id to each charPic based on the name of the character
 
-  console.log(characters[i].name) 
+  console.log(characters[i].name) // runs perfectly, but the rest of it doesn't fire for some reason
 
   $(charBox).prepend(characters[i].name) //+ '<br>' + " Health: " + characters[i].hp + '<br>' + " Attack: " + characters[i].maxAttack)  
 
@@ -133,15 +172,20 @@ else {
    
     else if (playerChosen === true && enemyChosen === false){// Second click chooses the enemy
       console.log("Player already chosen")
-      $("#char-select").append(""); //removes the selected charBox
+      $(".enemySelect-title").html("")
+      $("#char-select").html(""); //removes the selected charBox
       $(charBox).css("background-color", "orange");
       $("#char-select").css("width", "600px")
-    $("#combat").prepend(charBox); //places it in the div below it.
-    charBox = $('<div>'); //changes charBox from a button to a div, thus making it unable to be clicked again (Not working)
+      $("#combat").prepend(charBox); //places it in the div below it.
+      charBox = $('<div>'); //changes charBox from a button to a div, thus making it unable to be clicked again (Not working)
 
     var attackButton = $('<button>').addClass('atk-but'); //creates a new button called attackButton and assigns it the class 'atk-but'
     $(attackButton).html('attack') //makes the button says attack
     $("#combat").append(attackButton); //puts the button on the page
+
+    var abilityButton = $('<button>').addClass('abil-but'); //creates a new button called attackButton and assigns it the class 'atk-but'
+    $(abilityButton).html('ability') //makes the button says attack
+    $("#combat").append(abilityButton); //puts the button on the page
 
     $(".combat-title").html("Enemy selected: " + characters[i].name);
     enemyChosen = true;
@@ -159,6 +203,27 @@ else {
 
 //can probably move lose condition here ---(Suggestion)
 
+if (hero.hp <= 0) { //lose condition, if your health is at or below zero
+  alert("You lost")
+  hero.hp = 0
+  restart()
+}
+else {
+
+      if (currentEnemy.hp <= 0) { //win condition
+        alert(hero.name + " defeated " + currentEnemy.name + ". " + hero.name + "'s health is currently " + hero.hp)
+        console.log(characters[i].name)
+        $("#combat").html("")
+        $(".combat-text").html("")
+        $(".enemySelect-title").html("Enemy selection:");
+        enemyChosen = false;
+        wasEnemy.push(currentEnemy)
+        nextEnemy()
+        //remove enemy from array, restart a few lines back, maybe put charboxes in a function? --TODO
+      }
+
+      else {
+        console.log(currentEnemy.maxAttack)
       fighting((currentEnemy.maxAttack), (currentEnemy.minAttack), hero.hp) //the enemy attacks
       hero.hp = afterHealth //updates the hp
       $(".combat-text").append("<br>" + "<br>" + currentEnemy.name + " counter attacks " + hero.name + " for " + damage + " damage, " + "<br>" + hero.name + "'s health is now " + hero.hp); //2nd combat log
@@ -169,17 +234,70 @@ else {
         hero.hp = 0
         restart()
       }
-      else if (currentEnemy.hp <= 0) { //win condition
-        alert("You won")
+
+      else if(currentEnemy.hp <= 0) { //win condition
+        alert(hero.name + " defeated " + currentEnemy.name + ". " + hero.name + "'s health is currently " + hero.hp)
         console.log(characters[i].name)
         $("#combat").html("")
         $(".combat-text").html("")
+        $(".enemySelect-title").html("Enemy selection:");
+        enemyChosen = false;
+        wasEnemy.push(currentEnemy)
+        nextEnemy()
+        //remove enemy from array, restart a few lines back, maybe put charboxes in a function? --TODO
+      }
+    }
+    }
+
+    })
+
+    $(abilityButton).on("click", function() { //when you click on abilityButton
+      $(".combat-text").html("")
+      ability(hero.ability) //The hero uses an ability
+       //1st combat log
+      console.log(damage)
+
+//can probably move lose condition here ---(Suggestion)
+if (hero.hp <= 0) { //lose condition, if your health is at or below zero
+  alert("You lost")
+  hero.hp = 0
+  restart()
+}
+else {
+
+      if (currentEnemy.hp <= 0) { //win condition
+        alert(hero.name + " defeated " + currentEnemy.name + ". " + hero.name + "'s health is currently " + hero.hp)
+        console.log(characters[i].name)
+        $("#combat").html("")
+        $(".combat-text").html("")
+        $(".enemySelect-title").html("Enemy selection:");
         enemyChosen = false;
         wasEnemy.push(currentEnemy)
         nextEnemy()
         //remove enemy from array, restart a few lines back, maybe put charboxes in a function? --TODO
       }
 
+      else {
+        console.log(currentEnemy.maxAttack)
+      fighting((currentEnemy.maxAttack), (currentEnemy.minAttack), hero.hp) //the enemy attacks
+      hero.hp = afterHealth //updates the hp
+      $(".combat-text").append("<br>" + "<br>" + currentEnemy.name + " counter attacks " + hero.name + " for " + damage + " damage, " + "<br>" + hero.name + "'s health is now " + hero.hp); //2nd combat log
+      console.log(damage)
+
+      
+      if (currentEnemy.hp <= 0) { //win condition
+        alert(hero.name + " defeated " + currentEnemy.name + ". " + hero.name + "'s health is currently " + hero.hp)
+        console.log(characters[i].name)
+        $("#combat").html("")
+        $(".combat-text").html("")
+        $(".enemySelect-title").html("Enemy selection:");
+        enemyChosen = false;
+        wasEnemy.push(currentEnemy)
+        nextEnemy()
+        //remove enemy from array, restart a few lines back, maybe put charboxes in a function? --TODO
+      }
+    }
+    }
     })
     
 
