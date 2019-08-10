@@ -10,7 +10,8 @@ var characters = [
     hp: 1500, // health
     maxAttack: 30, // random num gen *
     minAttack: 20,
-    ability: "Mass shadow generator"
+    ability: "Mass shadow generator",
+    coolDown: 15,
   },
   {
     name: "Bastila", //name gets picture
@@ -19,7 +20,8 @@ var characters = [
     hp: 1000, // health
     maxAttack: 20, // random num gen * 
     minAttack: 10,
-    ability: "Battle meditation"
+    ability: "Battle meditation",
+    coolDown: 8,
   },
   {
     name: "Nihilus", //name gets picture
@@ -28,7 +30,8 @@ var characters = [
     hp: 800, // health
     maxAttack: 20, // random num gen * 
     minAttack: 5,
-    ability: "Force drain"
+    ability: "Force drain",
+    coolDown: 5,
   },
   {
     name: "Bane", //name gets picture
@@ -37,7 +40,8 @@ var characters = [
     hp: 1600, // health
     maxAttack: 30, // random num gen *
     minAttack: 25,
-    ability: "Orbalisk armor"
+    ability: "Orbalisk armor",
+    coolDown: 20,
   },
   {
     name: "Starweird", //name gets picture
@@ -46,7 +50,8 @@ var characters = [
     hp: 500, // health
     maxAttack: 70, // random num gen * 
     minAttack: 1,
-    ability: "Telepathic scream"
+    ability: "Telepathic scream",
+    coolDown: 10,
   }
   
   
@@ -80,12 +85,13 @@ var fighting = function(attack, minAttack, beforeHealth) { //takes in values giv
 }
 
 var ability = function(ability) {
-
-  if (hero.coolDown === 0) {
 if (ability === "Mass shadow generator") {
   console.log("Revan destroyed a planet")
   currentEnemy.hp = 1;
-  hero.hp *= 0.1;
+  currentEnemy.minAttack = 0;
+  currentEnemy.maxAttack = 0;
+  hero.hp *= 0.4;
+  hero.coolDown = 15;
   $(".combat-text").append(hero.name + " used " + hero.ability + " and annihilated " + currentEnemy.name + "." + "<br>" + " However " + hero.name + " Was also caught in the blast and barely survived" + "<br>" + hero.name + "'s health is now " + hero.hp);
 
 }
@@ -95,13 +101,33 @@ else if (ability === "Battle meditation") {
   currentEnemy.minAttack *= 0.8;
   hero.maxAttack = hero.maxAttack * 1.5;
   hero.minAttack = hero.minAttack * 1.5;
+  hero.coolDown = 8;
   $(".combat-text").append(hero.name + " used " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
   console.log(currentEnemy.maxAttack)
 }
+else if (ability === "Force drain") {
+  console.log("Nihilus drained the life out of " + currentEnemy.name);
+  currentEnemy.hp = (Math.floor(currentEnemy.hp * 0.5))
+  hero.hp += (Math.floor(currentEnemy.hp * 0.4))
+  hero.coolDown = 5;
+  $(".combat-text").append(hero.name + " used " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
+  console.log(currentEnemy.maxAttack)
 }
-else {
+else if (ability === "Orbalisk armor") {
+  console.log("Bane's Orbalisk armor hardens")
+  currentEnemy.maxAttack *= 0.5;
+  currentEnemy.minAttack *= 0.5;
+  hero.coolDown = 15;
+  $(".combat-text").append(hero.name + " used " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
+  console.log(currentEnemy.maxAttack)
+}
+else if (ability === "Telepathic scream"){
+  console.log("Starweird let out a terrifying screech");
+  currentEnemy.minAttack = 0;
+  currentEnemy.maxAttack = 0;
+  $(".combat-text").append(hero.name + " let out a " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
+}
 
-}
 
 }
 
@@ -112,8 +138,10 @@ nextEnemy = function() {
   if(wasEnemy.length === (characters.length - 1)) {
     alert("Game won, over")
     console.log("done")
-    restart() //not work
+    restart()
   }
+
+  else {
 
   $("#char-select").html("")
 
@@ -194,6 +222,14 @@ else {
     console.log(enemyChosen)
 
     $(attackButton).on("click", function() { //when you click on attackButton
+      hero.coolDown--
+      if (hero.coolDown <= 0) {
+        $(abilityButton).css('background-color', 'yellow')
+      }
+      else {
+        $(abilityButton).css('background-color', 'gray')
+      }
+    console.log("Cool Down " + hero.coolDown)
       $(".combat-text").html("")
       console.log(hero.name + " and " + currentEnemy.name + " are friends") //just making sure it got both objects down here
       fighting(hero.maxAttack, hero.minAttack, currentEnemy.hp) //The hero attacks
@@ -204,7 +240,6 @@ else {
 //can probably move lose condition here ---(Suggestion)
 
 if (hero.hp <= 0) { //lose condition, if your health is at or below zero
-  alert("You lost")
   hero.hp = 0
   restart()
 }
@@ -226,19 +261,28 @@ else {
         console.log(currentEnemy.maxAttack)
       fighting((currentEnemy.maxAttack), (currentEnemy.minAttack), hero.hp) //the enemy attacks
       hero.hp = afterHealth //updates the hp
+
+      if (hero.hp <= 0) { //Updates screen after loss ------------------------------------------------------------------
+        alert("You lost")
+        $(".enemySelect-title").html("")
+        $(".combat-text").html("")
+        $(".combat-title").html("")
+        $(".charSelect-title").html("")
+        $(".char-box").css('display', 'none')
+        $(attackButton).html('Continue')
+        $(abilityButton).css('display', 'none')
+        $(attackButton).css('left', '70px')
+      }
+else 
       $(".combat-text").append("<br>" + "<br>" + currentEnemy.name + " counter attacks " + hero.name + " for " + damage + " damage, " + "<br>" + hero.name + "'s health is now " + hero.hp); //2nd combat log
       console.log(damage)
+      
 
-      if (hero.hp <= 0) { //lose condition, if your health is at or below zero
-        alert("You lost")
-        hero.hp = 0
-        restart()
-      }
-
-      else if(currentEnemy.hp <= 0) { //win condition
+      
+      if (currentEnemy.hp <= 0) { //win condition
         alert(hero.name + " defeated " + currentEnemy.name + ". " + hero.name + "'s health is currently " + hero.hp)
         console.log(characters[i].name)
-        $("#combat").html("")
+        $(".combat-title").html("")
         $(".combat-text").html("")
         $(".enemySelect-title").html("Enemy selection:");
         enemyChosen = false;
@@ -246,12 +290,15 @@ else {
         nextEnemy()
         //remove enemy from array, restart a few lines back, maybe put charboxes in a function? --TODO
       }
+
     }
     }
 
     })
 
     $(abilityButton).on("click", function() { //when you click on abilityButton
+      if (hero.coolDown <= 0) {
+
       $(".combat-text").html("")
       ability(hero.ability) //The hero uses an ability
        //1st combat log
@@ -298,6 +345,11 @@ else {
       }
     }
     }
+  }
+  else {
+    alert("ability not ready yet, wait " + hero.coolDown + " more turns.")
+  }
+  $(abilityButton).css('background-color', 'gray')
     })
     
 
@@ -313,6 +365,8 @@ else {
 
 
 });
+}
+//--
 }
 nextEnemy()
 }

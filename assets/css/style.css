@@ -1,5 +1,4 @@
 body {
-    height: 2000px;
     font-family: 'Press Start 2P', cursive;
     background-image: url('../images/star-forge.jpg');
     background-repeat: no-repeat;
@@ -32,6 +31,7 @@ body {
     padding-left: 15px;
     padding-right: auto;
     margin: 10px;
+    margin-bottom: 8px;
     border: none;
     
 }
@@ -65,14 +65,16 @@ body {
 }
 
 .atk-but {
-    background-color: grey;
+    background-color: black;
+    color: White;
     width: 80px;
     height: 30px;
     border: none;
+    position: relative;
 }
 
 .abil-but {
-    background-color: yellow;
+    background-color: grey;
     width: 80px;
     height: 30px;
     border: none;
@@ -82,7 +84,7 @@ body {
 }
 
 .combat-text {
-        padding: 5px;
+        padding: 3px;
         text-align: center;
         font-size: 14px;
         color: red;
