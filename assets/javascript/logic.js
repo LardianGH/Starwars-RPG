@@ -12,6 +12,7 @@ var characters = [
     minAttack: 20,
     ability: "Mass shadow generator",
     coolDown: 15,
+    info: "Darth Revan's ability: Mass shadow generator, every 15 turns can be used to instantly destroy any enemy, at the cost of half his own health"
   },
   {
     name: "Bastila", //name gets picture  - Can win
@@ -22,6 +23,7 @@ var characters = [
     minAttack: 10,
     ability: "Battle meditation",
     coolDown: 8,
+    info: "Bastila's ability: Battle meditation, every 8 turns can be used to bolster her own attack by 60 percent and demoralize the current enemy to lower their attack by 20 percent"
   },
   {
     name: "Nihilus", //name gets picture - Can win
@@ -32,6 +34,7 @@ var characters = [
     minAttack: 5,
     ability: "Force drain",
     coolDown: 5,
+    info: "Darth Nihilus's ability: Force drain, every 5 turns can be used to rip half the life out of any enemy, using 40 percent of it to restore his own"
   },
   {
     name: "Bane", //name gets picture - Can win
@@ -42,6 +45,7 @@ var characters = [
     minAttack: 25,
     ability: "Orbalisk armor",
     coolDown: 20,
+    info: "Darth Bane's ability: Orbalisk armor, every 20 turns can be used to temporarily harden every surface of his body to reduce all damage from attacks by half."
   },
   {
     name: "Starweird", //name gets picture - Can win
@@ -52,6 +56,7 @@ var characters = [
     minAttack: 1,
     ability: "Telepathic scream",
     coolDown: 13,
+    info: "The Starweird's ability: Telepathic scream, every 13 turns can be used to terrify the enemy into dropping their attack to almost nothing."
   }
   
   
@@ -104,7 +109,7 @@ else if (ability === "Battle meditation") {
   hero.maxAttack = hero.maxAttack * 1.6;
   hero.minAttack = hero.minAttack * 1.6;
   hero.coolDown = 8;
-  $(".combat-text").append(hero.name + " used " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
+  $(".combat-text").append(hero.name + " turned the tide of battle with " + hero.ability + "<br>" + "demoralizing " + currentEnemy.name + " and adding to her own strength" + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
   console.log(currentEnemy.maxAttack)
 }
 else if (ability === "Force drain") {
@@ -112,7 +117,7 @@ else if (ability === "Force drain") {
   currentEnemy.hp = (Math.floor(currentEnemy.hp * 0.5))
   hero.hp += (Math.floor(currentEnemy.hp * 0.4))
   hero.coolDown = 5;
-  $(".combat-text").append(hero.name + " used " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
+  $(".combat-text").append(hero.name + " using " + hero.ability + " drained the life force out of " + currentEnemy.name + "<br>" + "Using this life force, " + hero.name + " restored his own health " + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
   console.log(currentEnemy.maxAttack)
 }
 else if (ability === "Orbalisk armor") {
@@ -120,15 +125,15 @@ else if (ability === "Orbalisk armor") {
   currentEnemy.maxAttack *= 0.5;
   currentEnemy.minAttack *= 0.5;
   hero.coolDown = 15;
-  $(".combat-text").append(hero.name + " used " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
+  $(".combat-text").append(hero.name + "'s " + hero.ability + " Hardened into a near inpenetrable shield" + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
   console.log(currentEnemy.maxAttack)
 }
 else if (ability === "Telepathic scream"){
   console.log("Starweird let out a terrifying screech");
   currentEnemy.minAttack = 0;
-  currentEnemy.maxAttack = 0;
+  currentEnemy.maxAttack = 4;
   hero.coolDown = 13;
-  $(".combat-text").append(hero.name + " let out a " + hero.ability + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
+  $(".combat-text").append(hero.name + " let out a " + hero.ability + " and lowered " + currentEnemy.name + "'s attack" + "<br>" + currentEnemy.name + "'s health is " + currentEnemy.hp);
 }
 
 
@@ -138,10 +143,23 @@ console.log(characters[0].name + "'s attack power is: " + characters[0].maxAttac
 
 nextEnemy = function() {
 
-  if(wasEnemy.length === (characters.length - 1)) {
-    alert("Game won, over")
+  if(wasEnemy.length === (characters.length - 1)) { //Checks if all characters are dead
+    alert("You won!")
+    var attackButton = $('<button>').addClass('atk-but'); //creates a new button called attackButton and assigns it the class 'atk-but'
+    $(attackButton).html('attack') //makes the button says attack
+    $("#combat").append(attackButton); //puts the button on the page
+    $(".enemySelect-title").html("")
+    $(".combat-text").html("")
+    $(".combat-title").html("")
+    $(".charSelect-title").html("")
+    $(".char-box").css('display', 'none')
+    $(attackButton).html('Restart')
+    $(attackButton).css('left', '70px')
     console.log("done")
+    $(attackButton).on("click", function() { 
+      console.log("click")
     restart()
+    })
   }
 
   else {
@@ -168,7 +186,7 @@ if ((characters[i] !== hero) && ($.inArray(characters[i], wasEnemy)) === -1){
 
   $(charBox).append($(charPic)); //impliments the div charPic to the div charBox
 
-  $(charBox).append(" Max Health: " + characters[i].hp + "<br>" + " Attack: " + characters[i].maxAttack) 
+  $(charBox).append(" Max Health: " + characters[i].hp + "<br>" + " Attack: (" + characters[i].minAttack + " - " + characters[i].maxAttack + ")") 
 
   if ((characters[i] != hero) && (wasEnemy.length >= 1)) {
 
@@ -200,6 +218,7 @@ else {
     characters[i].playerUsing = true;
     hero = characters[i]
     console.log(playerChosen)
+    alert(hero.info)
     }
 
     else if (characters[i].playerUsing === true) { //if the player character has been chosen
@@ -277,14 +296,14 @@ else {
       fighting((currentEnemy.maxAttack), (currentEnemy.minAttack), hero.hp) //the enemy attacks
       hero.hp = afterHealth //updates the hp
 
-      if (hero.hp <= 0) { //Updates screen after loss ------------------------------------------------------------------
+      if (hero.hp <= 0) { //Updates screen after loss
         alert("You lost")
         $(".enemySelect-title").html("")
         $(".combat-text").html("")
         $(".combat-title").html("")
         $(".charSelect-title").html("")
         $(".char-box").css('display', 'none')
-        $(attackButton).html('Continue')
+        $(attackButton).html('Restart')
         $(abilityButton).css('display', 'none')
         $(attackButton).css('left', '70px')
       }
