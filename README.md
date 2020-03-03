@@ -1,6 +1,6 @@
 # Starwars Old Republic RPG (Extended Universe)
 
-![image](./images/Readme-starwars.png)
+![image](./assets/images/Readme-starwars.png)
 
 [click here to play](https://lardiangh.github.io/Starwars-RPG/)
 
