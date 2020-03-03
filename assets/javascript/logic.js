@@ -406,7 +406,7 @@ nextEnemy()
 }
 restart() // First iteration of the whole thing
 
-//Unique abilities
+//Unique abilities (not all used)
     //  Lord of hunger(Passive) - Nihilus - health depletes on it's own every turn
     //  Lord of hunger(Active) - Nihilus - Drains enemy health and add to own health
     //  Battle meditation(Active) - Bastila - doubles attack, halves enemy attack for one? round
